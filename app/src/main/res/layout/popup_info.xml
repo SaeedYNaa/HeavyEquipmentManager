@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp">
+
+        <LinearLayout
+            android:id="@+id/gallary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+
+<!--            <HorizontalScrollView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal">-->
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/engineImage_popup"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/mkhbesh1"/>
+<!--            </HorizontalScrollView>-->
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+                <ScrollView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:fillViewport="true"
+                    android:layout_marginTop="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="right">
+
+                            <TextView
+                                android:id="@+id/engineName_popup"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="שם כלי: "
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_marginRight="60dp"
+                                android:layout_marginTop="30dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:text="שם כלי: "
+                                android:layout_marginTop="30dp"
+                                />
+
+
+                        </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="right">
+
+
+                        <TextView
+                            android:id="@+id/testDate_popup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="תאריך ראשיון: "
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="30dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="תאריך ראשיון: "
+                            android:textSize="12sp"
+                            android:layout_marginTop="30dp"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="right">
+
+
+
+                        <TextView
+                            android:id="@+id/ensurensDate_popup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="תאריך בטוח: "
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:layout_marginTop="30dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="תאריך בטוח: "
+                            android:textSize="12sp"
+                            android:layout_marginTop="30dp"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="right">
+
+
+                        <TextView
+                            android:id="@+id/treatment_popup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="תאריך טיפול: "
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:layout_marginTop="30dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="תאריך טיפול: "
+                            android:textSize="12sp"
+                            android:layout_marginTop="30dp"/>
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="right">
+
+
+
+                        <TextView
+                            android:id="@+id/nextTreatment_popup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="הטיפול הבא: "
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_marginTop="30dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="הטיפול הבא: "
+                            android:textSize="12sp"
+                            android:layout_marginTop="30dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="right">
+
+
+
+                        <TextView
+                            android:id="@+id/working_popup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="שעות פעילות: "
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginTop="30dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="שעות פעילות: "
+                            android:textSize="12sp"
+                            android:layout_marginTop="30dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/deleteEngine_popup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/delete_icon"
+                    android:layout_marginTop="10dp"
+                    app:fabSize="mini"/>
+
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/editEngine_popup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/edit_icon"
+                    app:fabSize="mini"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

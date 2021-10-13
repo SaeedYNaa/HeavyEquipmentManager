@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Engine.AddEngine">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/adding_kle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:text="הוספת כלי עבודה"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="30dp"
+            >
+
+            <EditText
+                android:id="@+id/tool_name"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="הזן שם כלי"
+                android:layout_margin="10dp"/>
+
+            <TextView
+                android:id="@+id/treatment_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:hint="הטיפול נעשה בתאריך"/>
+
+            <TextView
+                android:id="@+id/next_treatment_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:hint="הטיפול הבא בתארין"/>
+
+
+            <TextView
+                android:id="@+id/testDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:hint= "תאריך הנפקת כלי"/>
+
+
+            <TextView
+                android:id="@+id/ensurenceDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:hint="תאריך בטוח"/>
+
+            <EditText
+                android:id="@+id/working_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:inputType = "phone"
+                android:hint="שעות פעילות"/>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+
+                android:orientation="horizontal">
+
+
+
+                <Button
+                    android:id="@+id/save_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="שמור"
+                    android:textSize="15sp"/>
+
+
+                <Button
+                    android:id="@+id/cancel_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="לְבַטֵל"
+                    android:layout_marginLeft="90dp"
+                    android:textSize="15sp"/>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
