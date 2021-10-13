@@ -102,7 +102,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
 //        db.close();
-        Log.d("Databse: deleteRecordID", "Deleted " + id + " successfully");
+        Log.d("DATABASE-deleteRecord", "Deleted " + id + " successfully");
     }
 
     public void updateEngineInformation(int engineIndex, EngineTool en){
@@ -123,7 +123,6 @@ public class Database extends SQLiteOpenHelper {
 
     public void updateTable(){
         SQLiteDatabase db = this.getWritableDatabase();
-
         String drop_table = "DELETE FROM " + TABLE_NAME;
         db.execSQL(drop_table);
         db.close();
@@ -134,7 +133,7 @@ public class Database extends SQLiteOpenHelper {
                 saveEngine(en, index);
             }
         }
-        Log.d("Databse: updateTable()", "Table updated!");
+        Log.d("DATABASE-updateTable()", "Table updated!");
     }
 
     public boolean checkDB(int id, String name){

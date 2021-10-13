@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 
+import androidx.annotation.NonNull;
+
 /**
  * This class is responsible for all the action in this application.
  * There is only one manager.
@@ -82,7 +84,7 @@ public class Manager implements Serializable {
 
     public void deleteEngine(int index){
             if(engines.remove(index) == null){
-                Log.d("MANAGER", "deleteEngine(): index: " + index + " not found..");
+                Log.d("MANAGER-deleteEngine()", " index: " + index + " not found..");
             }
             else{
                 // remove from database
@@ -131,7 +133,7 @@ public class Manager implements Serializable {
 
             /**
              * there is a little bug in this approach
-             * ex current month x/1/2021 expired date x/12/2022 this will send notification while it we should send
+             * ex current month x/1/2021 expired date x/12/2022 this will send notification while it should send
              * it at x/11/2021
              * */
             // check the upcoming Engine-treatment date

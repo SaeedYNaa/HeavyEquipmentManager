@@ -10,6 +10,9 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.HeavyEquipmentManager">
         <activity
+            android:name=".LoginActivity"
+            android:exported="true" />
+        <activity
             android:name=".NotificationsActivity"
             android:exported="true" />
         <activity
