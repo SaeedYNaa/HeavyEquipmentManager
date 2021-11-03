@@ -1,9 +1,7 @@
 package com.example.heavyequipmentmanager;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -15,16 +13,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.heavyequipmentmanager.Administration.Constants;
 import com.example.heavyequipmentmanager.Administration.Database;
@@ -32,12 +26,14 @@ import com.example.heavyequipmentmanager.Administration.Manager;
 import com.example.heavyequipmentmanager.Engine.AddEngine;
 import com.example.heavyequipmentmanager.Engine.EngineTool;
 import com.example.heavyequipmentmanager.Notifications.AlarmHandler;
-import com.example.heavyequipmentmanager.Notifications.ExecutableService;
+import com.example.heavyequipmentmanager.Notifications.Receiver;
 import com.example.heavyequipmentmanager.Notifications.Notifications;
 import com.example.heavyequipmentmanager.databinding.ActivityMainBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
@@ -60,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(Constants.db == null)
-            Constants.db = new Database(this);
+            Constants.db = new Database(this, "ENGN");
         if(Constants.manager == null)
             Constants.manager = Manager.init();
 
@@ -71,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
 //        alarmHandler.setAlarmManager();
 
         // read from the database it all saved equipments
-
         Constants.db.loadData();
 
 //        Constants.manager.logEngines();
@@ -207,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
     public void createNotificationChannel(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID, "Manager", importance);
+            NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID, "Notification", importance);
             channel.setDescription("maybe it worked..");
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
@@ -216,14 +211,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startAlarm(){
-        Intent intent = new Intent(this, ExecutableService.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(getApplicationContext(), Receiver.class);
+        // The PendingIntent object here is just a way to wrap an intent into
+        // an object that can send the encapsulated intent later from outside the current application.
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP,
-                Constants.triggerAfter,
+        // setting up the time to trigger the alarm:
+        Calendar checkTime = Calendar.getInstance();
+        checkTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+        checkTime.set(Calendar.HOUR, 14);
+        checkTime.set(Calendar.MINUTE, 53);
+
+        long thirtySecondsFromNow = System.currentTimeMillis() + 30 * 1000;
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                thirtySecondsFromNow,
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES,
                 pendingIntent);
 
+        Log.d("startAlarm", "Alarm started");
     }
 }

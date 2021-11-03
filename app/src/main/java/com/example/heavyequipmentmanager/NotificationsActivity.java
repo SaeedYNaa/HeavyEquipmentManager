@@ -10,6 +10,10 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+
+/**
+ * This Activity is responsible for display all the notifications in a ListView item.
+ * */
 public class NotificationsActivity extends AppCompatActivity {
 
     @Override

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.heavyequipmentmanager.Administration.Constants;
@@ -20,7 +21,11 @@ import java.util.LinkedList;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-public class ExecutableService extends BroadcastReceiver {
+/**
+ * In order to listen for and react to broadcast intents that are triggered by alarms,
+ *  we must create a broadcast receiver and register it with the system (manifest file).
+ * */
+public class Receiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,26 +51,21 @@ public class ExecutableService extends BroadcastReceiver {
         }
 
 
+        Log.d("Receiver", "works done: " + expired.size());
 
         Intent noti_intent = new Intent(context, NotificationsActivity.class);
         noti_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         noti_intent.putExtra("contentList", contentTextlist);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 100, noti_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, noti_intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.CHANNEL_ID)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle("Manager")
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .setContentText(contentText)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+       Notifications not = new Notifications(context);
+       not.createNotification("Manager", pendingIntent, contentText);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(200, builder.build());
-//        MediaPlayer md = MediaPlayer.create(context, Settings.System.DEFAULT_NOTIFICATION_URI);
-//        md.start();
+//         for sound
+        MediaPlayer md = MediaPlayer.create(context, Settings.System.DEFAULT_NOTIFICATION_URI);
+        md.start();
 
     }
 }

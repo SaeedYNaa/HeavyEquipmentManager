@@ -41,7 +41,7 @@ public class AddEngine extends AppCompatActivity {
             EngineTool en = (EngineTool) intent.getExtras().get("Engine");
             editIndex = intent.getExtras().getInt("index");
             if (en != null) {// Editing engine
-                Toast.makeText(this, "edit", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "edit", Toast.LENGTH_SHORT).show();
                 editEngine(en);
             }
         }

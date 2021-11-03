@@ -47,9 +47,11 @@ public class Constants {
 
     /**
      * A reference to the database which contains the Engines list
+     * another that contains the users and passwords
      * **/
 
     public static Database db = null;
+    public static Database usersDB = null;
 
     /**
      * For AlarmHandler:

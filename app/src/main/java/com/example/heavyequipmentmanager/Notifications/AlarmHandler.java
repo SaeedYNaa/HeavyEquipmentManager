@@ -17,7 +17,7 @@ public class AlarmHandler {
 
     // this will activate the alarm
     public void setAlarmManager(){
-        PendingIntent sender = PendingIntent.getBroadcast(context, 2, new Intent(context, ExecutableService.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 2, new Intent(context, Receiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if(am != null){
             am.setRepeating(AlarmManager.RTC_WAKEUP, Constants.triggerAfter, Constants.triggerEvery, sender);
@@ -25,7 +25,7 @@ public class AlarmHandler {
     }
 
     public void cancelAlarmManager(){
-        PendingIntent sender = PendingIntent.getBroadcast(context, 2, new Intent(context, ExecutableService.class), 0);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 2, new Intent(context, Receiver.class), 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if(am != null){
             am.cancel(sender);
