@@ -16,18 +16,23 @@ import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.IconCompat;
 
 /**
  * This class is responsible for all the action in this application.
  * There is only one manager.
  * */
 public class Manager implements Serializable {
+
+
         public static Manager manager = null;
         private ConcurrentHashMap<Integer, EngineTool> engines;
+        private ConcurrentHashMap<Integer, Renter> renters;
 
 
         public Manager(){
             engines = new ConcurrentHashMap<>();
+            renters = new ConcurrentHashMap<>();
         }
 
 
@@ -42,8 +47,16 @@ public class Manager implements Serializable {
         return engines;
     }
 
+    public ConcurrentHashMap<Integer, Renter> getRenters() {
+        return renters;
+    }
+
     public void setEngines(ConcurrentHashMap<Integer, EngineTool> engines) {
         this.engines = engines;
+    }
+
+    public void setRenters(ConcurrentHashMap<Integer, Renter> renters) {
+        this.renters = renters;
     }
 
     public ArrayList<EngineTool> getTools(){
@@ -52,6 +65,15 @@ public class Manager implements Serializable {
                 arr.add(this.engines.get(i));
 
             return arr;
+    }
+
+    public void addRenter(int index, Renter r){
+            if(!this.renters.contains(index))
+                this.renters.put(index, r);
+
+            else
+                Log.d("addRenter", "Failed to add Renter, the key is already taken: "+index);
+
     }
 
     public void addEngine(int i, EngineTool en){
@@ -68,19 +90,24 @@ public class Manager implements Serializable {
                 Log.d("addEngine", "Failed to add Engine, the key is already taken.");
     }
 
-    public void editEngine(int i, String name, String treatment, String newTreatment, double workingHours){
+    public void editEngine(int i, String name, String treatment, String newTreatment, double workingHours, Double KM, String newImage, double price){
             EngineTool edited = this.engines.get(i);
             if(edited != null){
                 edited.setName(name);
                 edited.setTreatment(treatment);
                 edited.setNextTreatment(newTreatment);
                 edited.setWorkingHours(workingHours);
+                edited.setKM(KM);
+                edited.setPrice(price);
+                if(newImage != null)
+                    edited.setImagePath(newImage);
                 Constants.db.updateEngineInformation(i, edited);
             }
             else
                 Log.d("editEngine", "Failed to edit engine, the key is already taken.");
 
     }
+
 
     public void deleteEngine(int index){
             if(engines.remove(index) == null){
@@ -89,11 +116,7 @@ public class Manager implements Serializable {
             else{
                 // remove from database
                 Constants.db.deleteRecordID(index);
-                //update the list indices:
-//                Iterator<Integer> iterator = engines.keySet().iterator();
-//                while(iterator.hasNext()){
-//
-//                }
+
                 for(Integer i: engines.keySet()){
                     if(i > index){
                         // cuncurrentModifications issue..
@@ -149,15 +172,5 @@ public class Manager implements Serializable {
 
             return expiredAsStrings;
         }
-
-
-
-        // HELPER
-        public void logEngines(){
-            for(Integer i: engines.keySet()){
-                Log.d("MANAGER: logEngines()", "" + i + ": " + engines.get(i).getName());
-            }
-        }
-
 
 }

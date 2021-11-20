@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_gravity="center">
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp">
 
         <LinearLayout
             android:id="@+id/gallary"
@@ -39,23 +35,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-                <ScrollView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:fillViewport="true"
-                    android:layout_marginTop="20dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:gravity="right">
+                            android:gravity="right"
+                            android:weightSum="2">
+
 
                             <TextView
                                 android:id="@+id/engineName_popup"
@@ -65,13 +51,15 @@
                                 android:textColor="@color/black"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
-                                android:layout_marginRight="60dp"
-                                android:layout_marginTop="30dp"/>
+                                android:gravity="left"
+                                android:layout_marginTop="30dp"
+                                android:layout_weight="1"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="12sp"
+                                android:layout_weight="1"
                                 android:text="שם כלי: "
                                 android:layout_marginTop="30dp"
                                 />
@@ -83,7 +71,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="right">
+                        android:gravity="right"
+                        android:weightSum="2">
 
 
                         <TextView
@@ -95,13 +84,16 @@
                             android:textSize="12sp"
                             android:textStyle="bold"
                             android:layout_marginTop="30dp"
+                            android:layout_weight="1"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="תאריך ראשיון: "
                             android:textSize="12sp"
-                            android:layout_marginTop="30dp"/>
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            />
 
 
                     </LinearLayout>
@@ -122,13 +114,17 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:textSize="12sp"
-                            android:layout_marginTop="30dp"/>
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="תאריך בטוח: "
                             android:textSize="12sp"
-                            android:layout_marginTop="30dp"/>
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            />
 
 
                     </LinearLayout>
@@ -148,13 +144,17 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:textSize="12sp"
-                            android:layout_marginTop="30dp"/>
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="תאריך טיפול: "
                             android:textSize="12sp"
-                            android:layout_marginTop="30dp"/>
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            />
 
 
 
@@ -176,14 +176,18 @@
                             android:textSize="12sp"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            android:layout_marginTop="30dp"/>
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="הטיפול הבא: "
                             android:textSize="12sp"
-                            android:layout_marginTop="30dp"/>
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            />
 
                     </LinearLayout>
 
@@ -204,43 +208,79 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:layout_marginRight="16dp"
-                            android:layout_marginTop="30dp"/>
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            />
 
                         <TextView
+                            android:id="@+id/workingHoursHint"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="שעות פעילות: "
                             android:textSize="12sp"
-                            android:layout_marginTop="30dp"/>
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="1"
+                            />
                     </LinearLayout>
 
-                </LinearLayout>
-            </ScrollView>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/deleteEngine_popup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/delete_icon"
-                    android:layout_marginTop="10dp"
-                    app:fabSize="mini"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="right">
 
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/editEngine_popup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/edit_icon"
-                    app:fabSize="mini"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"/>
 
-        </LinearLayout>
-        </LinearLayout>
+                            <TextView
+                                android:id="@+id/price_popup"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="עלות השכרה: "
+                                android:textSize="12sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:layout_marginRight="16dp"
+                                android:layout_marginTop="30dp"
+                                android:layout_weight="1"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="עלות השכרה: "
+                                android:textSize="12sp"
+                                android:layout_marginTop="30dp"
+                                android:layout_weight="1"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/deleteEngine_popup"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/delete_icon"
+                                app:fabSize="mini"
+                                />
+
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/editEngine_popup"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/edit_icon"
+                                android:layout_weight="1"
+                                app:fabSize="mini"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
     </LinearLayout>
-
-</RelativeLayout>

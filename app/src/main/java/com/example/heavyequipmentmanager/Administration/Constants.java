@@ -6,6 +6,7 @@ import com.example.heavyequipmentmanager.Administration.Database;
 import com.example.heavyequipmentmanager.Administration.Manager;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Constants {
 
@@ -22,15 +23,9 @@ public class Constants {
      *
      * **/
     public static Manager manager = null;
-
-
-
     /**
-     * Intervals of time for checking the dates of each object.
-     * if date expired (week before) a notification sent from the device
+     * starting a new approach, each user will have it's own manager
      * **/
-
-    public static long miliseconds = 1000000;
 
 
     /**
@@ -59,8 +54,8 @@ public class Constants {
      *      - triggerEvery: when to restart the alaram
      *      (both parameters in milliseconds)
      * **/
-    public static long triggerAfter =  60 * 1000;        // one minute
-    public static long triggerEvery =  60 * 1000;
+    public static long triggerAfter =  60 * 60 * 1000;        // one HOUR
+    public static long triggerEvery = 60 * 60 * 1000;
 
 
 

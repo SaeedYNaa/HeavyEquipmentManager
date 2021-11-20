@@ -1,40 +1,92 @@
 package com.example.heavyequipmentmanager.Engine;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.Fade;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.heavyequipmentmanager.Administration.Constants;
+import com.example.heavyequipmentmanager.Administration.ImageManager.ImageManager;
+import com.example.heavyequipmentmanager.Administration.ImageManager.ImagePicker;
 import com.example.heavyequipmentmanager.MainActivity;
 import com.example.heavyequipmentmanager.Administration.Manager;
 import com.example.heavyequipmentmanager.R;
+import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.Calendar;
 
+import static com.example.heavyequipmentmanager.Administration.ImageManager.ImagePicker.CAMER_REQUEST;
+import static com.example.heavyequipmentmanager.Administration.ImageManager.ImagePicker.STORAGE_REQUEST;
+
 public class AddEngine extends AppCompatActivity {
-    DatePickerDialog.OnDateSetListener dateSetListener;
-    private View row;
     private int editIndex;
+    ImageView engineImagePicker;
+    LinearLayout imageLayout;
+    ToggleButton switcher;
+    EditText hOrKm;
+
+    // layout elements
+    EditText engine_name;
+    TextView treatmentDate;
+    TextView nextTreatment;
+    TextView testDate;
+    TextView ensurenceDate;
+    EditText renterCost;
+    int currentIndex;
+    boolean editHours = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+        getWindow().setExitTransition(new Fade());
         setContentView(R.layout.activity_add_engine);
         editIndex = -1;
+        switcher = (ToggleButton) findViewById(R.id.switcher);
+        engine_name = (EditText) findViewById(R.id.tool_name);
+        treatmentDate = (TextView) findViewById(R.id.treatment_date);
+        nextTreatment = (TextView) findViewById(R.id.next_treatment_date);
+        testDate = (TextView)findViewById(R.id.testDate);
+        ensurenceDate = (TextView)findViewById(R.id.ensurenceDate);
+        renterCost = (EditText)findViewById(R.id.renterCost);
+        hOrKm = (EditText) findViewById(R.id.hOrKmHint);
+        engineImagePicker = (ImageView) findViewById(R.id.addImage);
+        imageLayout = (LinearLayout) findViewById(R.id.imageLayout);
 
+        hOrKm.setHint("שעות פעילות");
+
+        // first check if Edit or new
         Intent intent = getIntent();
         if(intent.hasExtra("Engine")) {
 
@@ -45,11 +97,8 @@ public class AddEngine extends AppCompatActivity {
                 editEngine(en);
             }
         }
-        EditText engine_name = (EditText) findViewById(R.id.tool_name);
-        TextView treatmentDate = (TextView) findViewById(R.id.treatment_date);
-        TextView nextTreatment = (TextView) findViewById(R.id.next_treatment_date);
-        TextView testDate = (TextView)findViewById(R.id.testDate);
-        TextView ensurenceDate = (TextView)findViewById(R.id.ensurenceDate);
+        currentIndex = (int) intent.getExtras().get("engineCounter");
+
 
         engine_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -64,10 +113,49 @@ public class AddEngine extends AppCompatActivity {
             }
         });
 
+        Activity that = this;
+        // setting up the image (you can choose an image from gallery or take one from camera)
+        engineImagePicker.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                int picd = 0;
+                if(picd == 0){
+                    if(!ImageManager.imagePicker.checkCameraPermission(that))
+                        ImageManager.imagePicker.requestCameraPermission(that);
+                    else
+                        ImageManager.imagePicker.pickFromGallery(that);
+                }else if(picd == 1){
+                    if(!ImageManager.imagePicker.checkStoragePermission(that))
+                        ImageManager.imagePicker.requestStoragrePermission(that);
+                    else
+                        ImageManager.imagePicker.pickFromGallery(that);
+                }
+            }
+        });
+
+        // Toggle Button for working hours or Km
+        switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked) {
+                    hOrKm.setHint("קילומטראז'");
+                    editHours = false;
+                }
+                else {
+                    hOrKm.setHint("שעות פעילות");
+                    editHours = true;
+                }
+            }
+        });
+
+
+
         buildCalenderDialog(AddEngine.this, treatmentDate, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 createAndSetDate(treatmentDate, year, month, day);
+                createAndSetDate(nextTreatment, year + 1, month, day);
             }
         });
 
@@ -101,7 +189,7 @@ public class AddEngine extends AppCompatActivity {
                 }
                 else {
                     Intent intent = new Intent(AddEngine.this, MainActivity.class);
-                    startActivity(intent);
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(AddEngine.this).toBundle());
                 }
             }
         });
@@ -111,10 +199,63 @@ public class AddEngine extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(AddEngine.this, MainActivity.class);
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(AddEngine.this).toBundle());
             }
         });
 
+    }
+
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if(resultCode == RESULT_OK){
+                Uri resultUri = result.getUri();
+                ImageManager.imagePicker.saveImagePath(currentIndex, resultUri.getPath().toString());
+                engineImagePicker.setBackground(null);
+                Picasso.with(this).load(resultUri).into(engineImagePicker);
+            }
+        }
+    }
+
+
+    // For picking up images
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch(requestCode){
+            case CAMER_REQUEST: {
+                if (grantResults.length > 0) {
+                    boolean camera_accepted = grantResults[0] == (PackageManager.PERMISSION_GRANTED);
+                    boolean storage_accepted = grantResults[1] == (PackageManager.PERMISSION_GRANTED);
+
+                    if (camera_accepted && storage_accepted)
+                        ImageManager.imagePicker.pickFromGallery(this);
+                    else
+                        Toast.makeText(this, "Camera permission not enabel", Toast.LENGTH_SHORT).show();
+                }
+            }
+            break;
+
+            case STORAGE_REQUEST:{
+                if (grantResults.length > 0) {
+                    boolean storage_accepted = grantResults[0] == (PackageManager.PERMISSION_GRANTED);
+
+                    if (storage_accepted)
+                        ImageManager.imagePicker.pickFromGallery(this);
+                    else
+                        Toast.makeText(this, "Camera permission not enabel", Toast.LENGTH_SHORT).show();
+                }
+            }
+            break;
+
+        }
     }
 
 
@@ -127,8 +268,10 @@ public class AddEngine extends AppCompatActivity {
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
+
                 DatePickerDialog dialog = new DatePickerDialog(context, android.R.style.Theme_Holo_Dialog_MinWidth, st, year, month, day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setTitle(t.getHint().toString());
                 dialog.show();
             }
         });
@@ -140,33 +283,33 @@ public class AddEngine extends AppCompatActivity {
     }
 
     public int addEngineTool(View view){
-        EditText engine_name = (EditText) findViewById(R.id.tool_name);
-        TextView treatment = (TextView) findViewById(R.id.treatment_date);
-        TextView nextTreatment = (TextView) findViewById(R.id.next_treatment_date);
-        TextView ensurence = (TextView) findViewById(R.id.ensurenceDate);
-        TextView testDate = (TextView) findViewById(R.id.testDate);
-        EditText working = (EditText) findViewById(R.id.working_hours);
+        TextView renterCost = (TextView)findViewById(R.id.renterCost);
+        double hoursAndKm = 0;
 
-        if(engine_name.getText().toString().matches("") || treatment.getText().toString().matches("") || nextTreatment.getText().toString().matches("") || ensurence.getText().toString().matches("") || testDate.getText().toString().matches("") || working.getText().toString().matches(""))
+        // check if everything is legal
+        if(engine_name.getText().toString().matches("") || treatmentDate.getText().toString().matches("") || nextTreatment.getText().toString().matches("") || ensurenceDate.getText().toString().matches("") || testDate.getText().toString().matches("") || hOrKm.getText().toString().matches(""))
             return -1;
-        double working_hours = working == null? 0 : Double.parseDouble(working.getText().toString());
 
-
-
+        hoursAndKm = Double.parseDouble(hOrKm.getText().toString());
         if(editIndex != -1) {
-
-            Constants.manager.editEngine(editIndex, engine_name.getText().toString(), treatment.getText().toString(), nextTreatment.getText().toString(), working_hours);
+            Constants.manager.editEngine(editIndex, engine_name.getText().toString(), treatmentDate.getText().toString(), nextTreatment.getText().toString(), editHours? hoursAndKm : 0, hoursAndKm, ImageManager.imagePicker.getImagePath(currentIndex), Double.parseDouble(renterCost.getText().toString()));
+            if(!editHours) // KM
+                Constants.manager.getEngines().get(editIndex).setKM(hoursAndKm);
             return editIndex;
-        }else{// Edited functionallty
-            EngineTool newEngine = new EngineTool(engine_name.getText().toString(), treatment.getText().toString(), nextTreatment.getText().toString(), working_hours, 0);
-            newEngine.written = false;
-            String ensurenceDatee = ensurence.getText().toString();
+
+        }else{// Edited functionality
+            EngineTool newEngine = new EngineTool(engine_name.getText().toString(), treatmentDate.getText().toString(), nextTreatment.getText().toString(), editHours? hoursAndKm : 0, ImageManager.imagePicker.getImagePath(currentIndex), Double.parseDouble(renterCost.getText().toString()));
+            if(!editHours) // KM
+                newEngine.setKM(hoursAndKm);
+
+            String ensurenceDatee = ensurenceDate.getText().toString();
             if(!ensurenceDatee.matches(""))
                 newEngine.setEnsurenceDate(ensurenceDatee);
 
             String test_date = testDate.getText().toString();
             if(!ensurenceDatee.matches(""))
                 newEngine.setTestDate(test_date);
+
             int index = Manager.manager.getEngines().size();
             Manager.manager.addEngine(index, newEngine);
             return index;
@@ -174,18 +317,32 @@ public class AddEngine extends AppCompatActivity {
     }
 
     public void editEngine(EngineTool en){
-        EditText engine_name = (EditText) findViewById(R.id.tool_name);
-        TextView treatment = (TextView) findViewById(R.id.treatment_date);
-        TextView nextTreatment = (TextView) findViewById(R.id.next_treatment_date);
-        TextView ensurence = (TextView) findViewById(R.id.ensurenceDate);
-        TextView testDate = (TextView) findViewById(R.id.testDate);
-        EditText working = (EditText) findViewById(R.id.working_hours);
+
 
         engine_name.setText(en.getName());
-        treatment.setText(en.getTreatment());
+        treatmentDate.setText(en.getTreatment());
         nextTreatment.setText(en.getNextTreatment());
-        ensurence.setText(en.getEnsurenceDate());
+        ensurenceDate.setText(en.getEnsurenceDate());
         testDate.setText(en.getTestDate());
-        working.setText(en.getWorkingHours().toString());
+        hOrKm.setText(en.getWorkingHours().toString());
+        renterCost.setText(en.getPrice() + "");
+        // some declarations
+        if(en.getWorkingHours() == 0) { // means KM is pressed
+            hOrKm.setText(en.getKM().toString());
+            switcher.setChecked(true);
+        }
+
+        if(!en.getImagePath().matches("")) {
+            Bitmap bmImg = BitmapFactory.decodeFile(en.getImagePath());
+            engineImagePicker.setImageBitmap(bmImg);
+            engineImagePicker.setBackground(null);
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 }

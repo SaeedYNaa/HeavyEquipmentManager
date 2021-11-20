@@ -41,7 +41,7 @@ public class FileManager {
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 //                Constants.manager = (Manager) objectInputStream.readObject();
                 ConcurrentHashMap<Integer, EngineTool> enginesLoaded = (ConcurrentHashMap<Integer, EngineTool>) objectInputStream.readObject();
-                Constants.manager = Manager.init();
+//                Constants.manager = Manager.init();
                 Constants.manager.setEngines(enginesLoaded);
                 objectInputStream.close();
                 fileInputStream.close();

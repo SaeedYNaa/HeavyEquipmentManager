@@ -8,7 +8,9 @@ public class EngineTool implements Serializable {
     private String treatment;
     private String nextTreatment;
     private Double workingHours;
-    private int imageId;
+    private Double KM;
+    private String imagePath;
+    private double price;
 
     /**General Information*/
     private String testDate;
@@ -18,12 +20,13 @@ public class EngineTool implements Serializable {
     /**For saving state purpose */
     public static boolean written = false;
 
-    public EngineTool(String name, String treatment, String newTreatment, double workingHours, int image){
+    public EngineTool(String name, String treatment, String newTreatment, double workingHours, String imagePath, double price){
         this.name = name;
         this.treatment = treatment;
         this.nextTreatment = newTreatment;
         this.workingHours = workingHours;
-        this.imageId = image;
+        this.imagePath = imagePath;
+        this.price = price;
     }
 
     public String getName() {
@@ -42,8 +45,12 @@ public class EngineTool implements Serializable {
         return workingHours;
     }
 
-    public int getImageId() {
-        return imageId;
+    public Double getKM() {
+        return KM;
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     public String getTestDate() {
@@ -52,6 +59,10 @@ public class EngineTool implements Serializable {
 
     public String getEnsurenceDate() {
         return ensurenceDate;
+    }
+
+    public double getPrice() {
+        return price;
     }
 
     public void setName(String name) {
@@ -70,8 +81,12 @@ public class EngineTool implements Serializable {
         this.workingHours = workingHours;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setKM(Double KM) {
+        this.KM = KM;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public void setTestDate(String testDate) {
@@ -80,5 +95,9 @@ public class EngineTool implements Serializable {
 
     public void setEnsurenceDate(String ensurenceDate) {
         this.ensurenceDate = ensurenceDate;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

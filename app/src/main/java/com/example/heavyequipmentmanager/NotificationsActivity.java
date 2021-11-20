@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.heavyequipmentmanager.Notifications.ListViewNotification;
+
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 
 /**

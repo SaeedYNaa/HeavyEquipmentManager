@@ -19,6 +19,23 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
 
+        <LinearLayout
+            android:id="@+id/imageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/addImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/addphoto_foreground"
+                />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,15 +90,66 @@
                 android:gravity="center"
                 android:hint="תאריך בטוח"/>
 
-            <EditText
-                android:id="@+id/working_hours"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:inputType = "phone"
-                android:hint="שעות פעילות"/>
+                android:orientation="horizontal"
+                android:gravity="right">
+
+
+                <EditText
+                    android:id="@+id/hOrKmHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="40dp"
+                    android:gravity="center"
+                    android:inputType = "phone"
+                    android:hint=""/>
+
+
+                <ToggleButton
+                    android:id="@+id/switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:textOff="H"
+                    android:textOn="KM"
+                    />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right">
+
+                <EditText
+                    android:id="@+id/renterCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="25dp"
+                    android:gravity="center"
+                    android:inputType = "phone"
+                    android:hint="עלות ₪"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:hint="עלות השכרה: "/>
+
+
+
+
+            </LinearLayout>
+
 
 
 
@@ -90,7 +158,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-
+                android:weightSum="2"
                 android:orientation="horizontal">
 
 
@@ -100,22 +168,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="שמור"
-                    android:textSize="15sp"/>
+                    android:layout_weight="1"
+                    android:textSize="15sp"
+                    android:layout_marginBottom="20dp"/>
 
 
                 <Button
                     android:id="@+id/cancel_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="לְבַטֵל"
-                    android:layout_marginLeft="90dp"
-                    android:textSize="15sp"/>
+                    android:text="בטול"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="80dp"
+                    android:textSize="15sp"
+                    android:layout_marginBottom="20dp"/>
 
 
             </LinearLayout>
 
 
         </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

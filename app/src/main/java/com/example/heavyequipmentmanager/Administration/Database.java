@@ -22,7 +22,9 @@ public class Database extends SQLiteOpenHelper {
     public static final String COL5 = "WORKINGHOURS";
     public static final String COL6 = "TESTDATE";
     public static final String COL7 = "ENSURENCEDATE";
-    public static final String COL8 = "IMAGESID";
+    public static final String COL8 = "KM";
+    public static final String COL9 = "IMAGEPATHS";
+    public static final String COL10 = "PRICE";
 
     public static final String TABLE_NAME_U = "Users";
     public static final String U_COL1 = "ID";
@@ -43,7 +45,7 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 //        if(switcher.matches("ENGN")) {
         String createEnginesTable = "CREATE TABLE " + TABLE_NAME_E + " ( " + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + COL4 + " TEXT, " + COL5 + " REAL, " +
-                COL6 + " TEXT, " + COL7 + " TEXT)";
+                COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " REAL, " + COL9 + " TEXT, " + COL10 + " REAL" + ");";
 
         sqLiteDatabase.execSQL(createEnginesTable);
 //        }
@@ -90,6 +92,9 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(COL5, en.getWorkingHours());
         contentValues.put(COL6, en.getTestDate());
         contentValues.put(COL7, en.getEnsurenceDate());
+        contentValues.put(COL8, en.getKM());
+        contentValues.put(COL9, en.getImagePath());
+        contentValues.put(COL10, en.getPrice());
         // check if such row exists:
          if(!checkDB(index, en.getName()))
             db.insert(TABLE_NAME_E, null, contentValues);
@@ -113,8 +118,11 @@ public class Database extends SQLiteOpenHelper {
                     Double workingHours = data.getDouble(4);
                     String testDate = data.getString(5);
                     String ensurenceDate = data.getString(6);
-                    EngineTool en = new EngineTool(name, treatment, nextTreatment, workingHours, 0);
-
+                    Double KM = data.getDouble(7);
+                    String imagePath = data.getString(8);
+                    Double price = data.getDouble(9);
+                    EngineTool en = new EngineTool(name, treatment, nextTreatment, workingHours, imagePath, price);
+                    en.setKM(KM);
                     if (!testDate.matches(""))
                         en.setTestDate(testDate);
                     if (!ensurenceDate.matches(""))
@@ -148,6 +156,10 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(COL5, en.getWorkingHours());
         contentValues.put(COL6, en.getTestDate());
         contentValues.put(COL7, en.getEnsurenceDate());
+        contentValues.put(COL8, en.getKM());
+        contentValues.put(COL9, en.getImagePath());
+        contentValues.put(COL10, en.getPrice());
+
         db.update(TABLE_NAME_E, contentValues, "ID = ?", new String[] {engineIndex+""});
 //        db.close();
         return;
@@ -197,9 +209,12 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor mCursor = null;
-
-        mCursor = db.rawQuery("SELECT * FROM " + TABLE_NAME_U + " WHERE " + U_COL2 + " = " + "'"+username+"'" + " AND " + U_COL3 + " = " + "'"+pass+"'", null);
-
+        try {
+            mCursor = db.rawQuery("SELECT * FROM " + TABLE_NAME_U + " WHERE " + U_COL2 + " = " + "'" + username + "'" + " AND " + U_COL3 + " = " + "'" + pass + "'", null);
+        }catch(RuntimeException e){
+            Log.d("Database-line 196", "failed to read the query");
+            return false;
+        }
         if(mCursor.getCount() > 0) {
             mCursor.close();
 //            db.close();

@@ -1,9 +1,12 @@
 package com.example.heavyequipmentmanager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,23 +14,33 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.util.Log;
+import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.heavyequipmentmanager.Administration.Constants;
 import com.example.heavyequipmentmanager.Administration.Database;
+import com.example.heavyequipmentmanager.Administration.ImageManager.ImageManager;
 import com.example.heavyequipmentmanager.Administration.Manager;
 import com.example.heavyequipmentmanager.Engine.AddEngine;
 import com.example.heavyequipmentmanager.Engine.EngineTool;
-import com.example.heavyequipmentmanager.Notifications.AlarmHandler;
 import com.example.heavyequipmentmanager.Notifications.Receiver;
-import com.example.heavyequipmentmanager.Notifications.Notifications;
 import com.example.heavyequipmentmanager.databinding.ActivityMainBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,71 +50,63 @@ import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
-    ListView listViewData;
-    public final String CHANNEL_ID = "ChannelID";
-    public final String CHANE_NAME = "Notification";
-//    Database db;
-    Notifications not;
-    AlarmHandler alarmHandler;
+    Pair<ListView, ListViewEquipments> listViewData;
+
+    public static int engineCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+        getWindow().setExitTransition(new Fade());
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        getSupportActionBar().setTitle("");
         setContentView(R.layout.activity_main);
         Constants.CONTEXT = getApplicationContext();
+//
+//        createNotificationChannel();
+//        startAlarm();
 
-        createNotificationChannel();
-        startAlarm();
 
-
-        if(Constants.db == null)
+        if(Constants.db == null) {
             Constants.db = new Database(this, "ENGN");
-        if(Constants.manager == null)
-            Constants.manager = Manager.init();
+        }
 
-        // Start the notification and background alarm
-//        not.createNotificationChannel();
-//        alarmHandler = new AlarmHandler(this);
-//        alarmHandler.cancelAlarmManager();
-//        alarmHandler.setAlarmManager();
+        if(Constants.manager == null) {
+            Constants.manager = Manager.init();
+        }
+
 
         // read from the database it all saved equipments
-        Constants.db.loadData();
-
-//        Constants.manager.logEngines();
-//        Constants.manager.logEngines();
+        if(Constants.manager.getEngines().size() == 0) {
+            Constants.db.loadData();
+        }
 
         // starting the ListView in the first page
-        listViewData = showLIstView(getApplicationContext(), Constants.manager.getTools());
+         listViewData = showListView(getApplicationContext(), Constants.manager.getTools());
 
         FloatingActionButton addEngineButton = (FloatingActionButton) findViewById(R.id.addFloatingButton);
         addEngineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddEngine.class);
-                startActivity(intent);
+                intent.putExtra("engineCounter", engineCounter);
+                engineCounter++;
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
             }
         });
-
-
-        FloatingActionButton searchEngine = (FloatingActionButton) findViewById(R.id.searchFloatingButton);
-        searchEngine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
-
-
     }
 
 
-    public ListView showLIstView(Context context, ArrayList<EngineTool> ens){
+
+    public Pair<ListView, ListViewEquipments> showListView(Context context, ArrayList<EngineTool> ens){
         ListViewEquipments viewEquipment = new ListViewEquipments(context, ens);
         ListView l = (ListView) findViewById(R.id.list_view);
         l.setAdapter(viewEquipment);
         l.setClickable(true);
 
+        // Pop-Up page
         Activity that = this;
         l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -115,16 +120,28 @@ public class MainActivity extends AppCompatActivity {
                 TextView treatment = (TextView) infoPopUp.findViewById(R.id.treatment_popup);
                 TextView nextTreatment = (TextView) infoPopUp.findViewById(R.id.nextTreatment_popup);
                 TextView workingHours = (TextView) infoPopUp.findViewById(R.id.working_popup);
+                CircleImageView engineImage = (CircleImageView) infoPopUp.findViewById(R.id.engineImage_popup);
+                TextView hOrKmHint = (TextView) infoPopUp.findViewById(R.id.workingHoursHint);
+                TextView price = (TextView) infoPopUp.findViewById(R.id.price_popup);
 
 
-                EngineTool en = Constants.manager.getEngines().get(i);
+                EngineTool en = viewEquipment.getEnginesList().get(i);
                 name.setText(en.getName());
                 testDate.setText(en.getTestDate());
                 ensureneDate.setText(en.getEnsurenceDate());
                 treatment.setText(en.getTreatment());
                 nextTreatment.setText(en.getNextTreatment());
-                workingHours.setText(en.getWorkingHours() + "h");
+                price.setText(en.getPrice() + "₪");
+                if(en.getWorkingHours() > 0) {
+                    workingHours.setText(en.getWorkingHours() + "h");
+                }
+                else {
+                    hOrKmHint.setText("קילומטראז': ");
+                    workingHours.setText(en.getKM() + "KM");
+                }
 
+                Bitmap bmImg = ImageManager.readImage(en.getImagePath());
+                engineImage.setImageBitmap(bmImg);
 
                 /*Delete button*/
                 dialogBuilder.setView(infoPopUp);
@@ -138,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void yes() {
                                 Constants.manager.deleteEngine(i);
-                                showLIstView(that, Constants.manager.getTools());
+                                showListView(that, Constants.manager.getTools());
                                 dialog.dismiss();
                             }
 
@@ -157,15 +174,16 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         Intent intent = new Intent(context, AddEngine.class);
                         intent.putExtra("Engine", en);
-                        intent.putExtra("index", i);
-                        startActivity(intent);
+                        intent.putExtra("engineCounter", i);
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
                     }
                 });
                 dialog.show();
-                dialog.getWindow().setLayout(850, 1600);
+                dialog.getWindow().setLayout(850, 1650);
             }
         });
-        return l;
+
+        return new Pair<>(l, viewEquipment);
     }
 
 
@@ -230,5 +248,45 @@ public class MainActivity extends AppCompatActivity {
                 pendingIntent);
 
         Log.d("startAlarm", "Alarm started");
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+
+                listViewData.second.getFilter().filter(s);
+                return true;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.search)
+            return true;
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, HomeActivity.class);
+        startActivity(i, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 }
