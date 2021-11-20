@@ -99,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    public Pair<ListView, ListViewEquipments> showListView(Context context, ArrayList<EngineTool> ens){
+        public Pair<ListView, ListViewEquipments> showListView(Context context, ArrayList<EngineTool> ens){
         ListViewEquipments viewEquipment = new ListViewEquipments(context, ens);
         ListView l = (ListView) findViewById(R.id.list_view);
         l.setAdapter(viewEquipment);

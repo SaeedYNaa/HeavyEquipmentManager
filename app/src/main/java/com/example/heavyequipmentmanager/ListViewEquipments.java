@@ -16,6 +16,7 @@ import com.example.heavyequipmentmanager.Engine.EngineTool;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ public class ListViewEquipments extends ArrayAdapter<EngineTool> implements Filt
     ArrayList<EngineTool> enginesList;
     ArrayList<EngineTool> searchEnginesList;
 
+    public static final String TAG = "ListViewEquipments";
 
     public ListViewEquipments(Context context, ArrayList<EngineTool> enginesList){
         super(context, R.layout.listview_tiem, enginesList);
@@ -86,22 +88,59 @@ public class ListViewEquipments extends ArrayAdapter<EngineTool> implements Filt
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         EngineTool en = getItem(position);
-
+        ViewHolder viewHolder;
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview_tiem, parent, false);
+            viewHolder = new ViewHolder(convertView, position);
+
+            convertView.setTag(viewHolder);
+            System.out.println(TAG + " view holder null");
+        }
+        else{
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        TextView name = convertView.findViewById(R.id.engineName);
-        TextView date = convertView.findViewById(R.id.engineDate);
-        CircleImageView image = (CircleImageView) convertView.findViewById(R.id.engineImage);
 
         String nextTreatment = "הטיפול הבא: " + en.getNextTreatment();
-        name.setText(en.getName());
-        date.setText(nextTreatment);
-        Bitmap bmImg = ImageManager.readImage(en.getImagePath());
-        image.setImageBitmap(bmImg);
+        viewHolder.name.setText(en.getName());
+        viewHolder.date.setText(nextTreatment);
+//        Downloader d = new Downloader();
+//        Bitmap bmImg = null;
+//        try {
+//            bmImg = d.execute(en.getImagePath()).get();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        viewHolder.image.setImageBitmap(ImageManager.readImage(en.getImagePath()));
 
         return convertView;
+    }
+
+
+    public class Downloader extends AsyncTask<String, Void, Bitmap>{
+
+
+        @Override
+        protected Bitmap doInBackground(String... paths) {
+            return ImageManager.readImage(paths[0]);
+        }
+    }
+
+
+    public class ViewHolder{
+        TextView name;
+        TextView date;
+        CircleImageView image;
+        int position;
+
+        public ViewHolder(View convertView, int position){
+             this.name = convertView.findViewById(R.id.engineName);
+             this.date = convertView.findViewById(R.id.engineDate);
+             this.image = (CircleImageView) convertView.findViewById(R.id.engineImage);
+        }
+
     }
 
 }
